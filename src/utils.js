@@ -14,18 +14,18 @@ export const constrainPosition = (position, size = 100) => {
   const containerHeight = container.clientHeight;
 
   // constrain the sprite position
-  const constrainedX = Math.max(
-    -containerWidth / 2 + size / 2,
-    Math.min(position.x, containerWidth / 2 - size / 2)
-  );
-  const constrainedY = Math.max(
-    -containerHeight / 2 + size / 2,
-    Math.min(position.y, containerHeight / 2 - size / 2)
-  );
+  // const constrainedX = Math.max(
+  //   -containerWidth / 2 + size / 2,
+  //   Math.min(position.x, containerWidth / 2 - size / 2)
+  // );
+  // const constrainedY = Math.max(
+  //   -containerHeight / 2 + size / 2,
+  //   Math.min(position.y, containerHeight / 2 - size / 2)
+  // );
 
   // calculate the CSS left and top values
-  const left = containerWidth / 2 + constrainedX - size / 2;
-  const top = containerHeight / 2 + constrainedY - size / 2;
+  const left = containerWidth / 2 + position.x - size / 2;
+  const top = containerHeight / 2 + position.y - size / 2;
 
   return {
     x: left,
@@ -46,5 +46,5 @@ export const moveSprite = (position, steps, direction) => {
 export const rotateSprite = (direction, degrees) => {
   degrees = Number(degrees);
 
-  return (direction + degrees + 360) % 360;
+  return direction + degrees;
 };

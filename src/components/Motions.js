@@ -84,7 +84,7 @@ export const RotateClockwise = ({ draggable = true, data = "15", onBlur }) => {
     >
       <div className="flex flex-row flex-wrap gap-1 items-center w-full bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer">
         <span>{"turn "}</span>
-        <Icon name="undo" size={15} className="text-white mx-2" />
+        <Icon name="redo" size={15} className="text-white mx-2" />
         <Input
           tabIndex="0"
           type="number"
@@ -118,7 +118,7 @@ export const RotateAnticlockwise = ({
     >
       <div className="flex flex-row flex-wrap items-center gap-1 w-full bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer">
         <span>{"turn "}</span>
-        <Icon name="redo" size={15} className="text-white mx-2" />
+        <Icon name="undo" size={15} className="text-white mx-2" />
         <Input
           tabIndex="0"
           type="number"

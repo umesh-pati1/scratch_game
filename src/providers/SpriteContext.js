@@ -100,6 +100,18 @@ export function SpriteProvider({ children }) {
     });
   };
 
+  const swapEvents = (sprite1Id, sprite2Id) => {
+    setEvents((prevEvents) => {
+      const sprite1Events = prevEvents[sprite1Id] || [];
+      const sprite2Events = prevEvents[sprite2Id] || [];
+      return {
+        ...prevEvents,
+        [sprite1Id]: sprite2Events,
+        [sprite2Id]: sprite1Events,
+      };
+    });
+  };
+
   return (
     <SpriteContext.Provider
       value={{
@@ -112,6 +124,7 @@ export function SpriteProvider({ children }) {
         events,
         addEvent,
         updateEvent,
+        swapEvents,
       }}
     >
       {children}

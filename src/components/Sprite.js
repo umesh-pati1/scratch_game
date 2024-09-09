@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  forwardRef,
+  useLayoutEffect,
+} from "react";
 import CatSprite from "./CatSprite";
 import { useSprites } from "../providers/SpriteContext";
 
@@ -37,7 +43,7 @@ const Sprite = ({
 
       switch (event.type) {
         case constants.MOVE_STEPS:
-          newPosition = moveSprite(position, ...event.data);
+          newPosition = moveSprite(position, event.data, direction);
           break;
         case constants.GO_TO:
           newPosition = {
@@ -69,27 +75,31 @@ const Sprite = ({
     }
   };
 
-  const executeEvents = (events) => {
+  const executeEvents = async (events) => {
     let eventQueue = structuredClone(events);
 
     console.log(eventQueue);
 
-    const processQueue = () => {
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const processQueue = async () => {
       if (eventQueue.length === 0) return;
 
       const event = eventQueue.shift();
 
       if (event.type === constants.REPEAT_CONTROL) {
         const times = Number(event.data);
-        const repeatQueue = eventQueue;
+        const repeatQueue = [...eventQueue];
 
         for (let i = 0; i < times; i++) {
-          repeatQueue.forEach((event) => {
+          for (let event of repeatQueue) {
             executeEvent(event);
-          });
+            await delay(500); // Delay of 500ms between each event in the loop
+          }
         }
       } else {
         executeEvent(event);
+        await delay(500); // Delay of 500ms between each event in the queue
         processQueue();
       }
     };
@@ -140,6 +150,7 @@ const Sprite = ({
       ref={spriteRef}
       data-x={initialPosition.x}
       data-y={initialPosition.y}
+      data-id={id}
       style={{
         position: "absolute",
         left: `${position.x}px`,
