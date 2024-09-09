@@ -1,0 +1,10 @@
+[
+  {
+    "id": "event_01",
+    "title": "When Flag is Clicked"
+  },
+  {
+    "id": "event_02",
+    "title": "When this sprite clicked"
+  }
+]
