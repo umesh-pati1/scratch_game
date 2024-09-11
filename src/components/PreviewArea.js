@@ -1,9 +1,9 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { useSprites } from "../providers/SpriteContext";
 import Sprite from "./Sprite";
 
 export default function PreviewArea() {
-  const { sprites, activeSprite, events, swapEvents } = useSprites();
+  const { sprites, activeSprite, swapEvents, events } = useSprites();
 
   // Collision detection function
   const checkCollision = (sprite1Ref, sprite2Ref) => {
@@ -39,11 +39,29 @@ export default function PreviewArea() {
         const sprite1Id = sprite1.getAttribute("data-id");
         const sprite2Id = sprite2.getAttribute("data-id");
 
-        console.log(sprite1Id, sprite2Id);
-
         // Check for collision between sprite1 and sprite2
         if (checkCollision(sprite1, sprite2)) {
-          swapEvents(sprite1Id, sprite2Id); // Swap events based on IDs
+          // Swap events for the two collided sprites
+          // swapEvents(sprite1Id, sprite2Id);
+
+          const sprite1Events = events[sprite1Id];
+          const sprite2Events = events[sprite2Id];
+
+          sprite1.setAttribute("data-events", JSON.stringify(sprite2Events));
+          sprite2.setAttribute("data-events", JSON.stringify(sprite1Events));
+
+          // Trigger a custom "collision" event on both sprites
+          const collisionEvent1 = new CustomEvent("collision", {
+            detail: { spriteId: sprite1Id, collidedWith: sprite2Id },
+          });
+          const collisionEvent2 = new CustomEvent("collision", {
+            detail: { spriteId: sprite2Id, collidedWith: sprite1Id },
+          });
+
+          sprite1.dispatchEvent(collisionEvent1);
+          sprite2.dispatchEvent(collisionEvent2);
+
+          return;
         }
       }
     }
@@ -56,7 +74,7 @@ export default function PreviewArea() {
     return () => {
       clearInterval(collisionInterval);
     };
-  }, [events, swapEvents]);
+  }, [swapEvents]);
 
   return (
     <div id="preview-area" className="flex-1 p-2 bg-white rounded-xl relative">

@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CatSprite from "./CatSprite";
 import { useSprites } from "../providers/SpriteContext";
 
@@ -22,6 +16,8 @@ const Sprite = ({
   const [position, setPosition] = useState(initialPosition);
   const [direction, setDirection] = useState(initialDirection);
   const spriteRef = useRef(null);
+
+  const execEventsRef = useRef(false);
 
   const { events } = useSprites();
 
@@ -59,6 +55,7 @@ const Sprite = ({
           break;
         default:
           console.log(`Unknown event type: ${event.type}`);
+          return;
           break;
       }
 
@@ -75,15 +72,15 @@ const Sprite = ({
     }
   };
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const executeEvents = async (events) => {
+    console.log("here: ", events);
+    execEventsRef.current = true;
     let eventQueue = structuredClone(events);
 
-    console.log(eventQueue);
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
     const processQueue = async () => {
-      if (eventQueue.length === 0) return;
+      if (eventQueue?.length === 0) return;
 
       const event = eventQueue.shift();
 
@@ -92,12 +89,14 @@ const Sprite = ({
         const repeatQueue = [...eventQueue];
 
         for (let i = 0; i < times; i++) {
-          for (let event of repeatQueue) {
+          for await (let event of repeatQueue) {
+            if (!execEventsRef.current) return;
             executeEvent(event);
             await delay(500); // Delay of 500ms between each event in the loop
           }
         }
       } else {
+        if (!execEventsRef.current) return;
         executeEvent(event);
         await delay(500); // Delay of 500ms between each event in the queue
         processQueue();
@@ -106,6 +105,26 @@ const Sprite = ({
 
     processQueue();
   };
+
+  // Add custom event listener for the "collision" event
+  useEffect(() => {
+    const spriteElement = spriteRef.current;
+
+    const handleCollision = async (e) => {
+      console.log(`here: Collision detected for sprite ${e.detail.spriteId}`);
+      const newEvents = JSON.parse(spriteElement.dataset.events || "[]");
+      console.log("here: execute new events", id, newEvents);
+      execEventsRef.current = false;
+      await delay(500);
+      executeEvents(newEvents);
+    };
+
+    spriteElement.addEventListener("collision", handleCollision);
+
+    return () => {
+      spriteElement.removeEventListener("collision", handleCollision);
+    };
+  }, []);
 
   // Update position when initialPosition or initialSize changes
   useEffect(() => {
@@ -148,9 +167,10 @@ const Sprite = ({
     <div
       className={className}
       ref={spriteRef}
+      data-id={id}
       data-x={initialPosition.x}
       data-y={initialPosition.y}
-      data-id={id}
+      data-events="[]"
       style={{
         position: "absolute",
         left: `${position.x}px`,
