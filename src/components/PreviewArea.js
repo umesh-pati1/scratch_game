@@ -7,17 +7,21 @@ export default function PreviewArea() {
 
   // Collision detection function
   const checkCollision = (sprite1Ref, sprite2Ref) => {
-    if (!sprite1Ref.current || !sprite2Ref.current) return false;
+    if (!sprite1Ref || !sprite2Ref) return false;
 
-    const sprite1Rect = sprite1Ref.current.getBoundingClientRect();
-    const sprite2Rect = sprite2Ref.current.getBoundingClientRect();
+    const sprite1Rect = sprite1Ref.getBoundingClientRect();
+    const sprite2Rect = sprite2Ref.getBoundingClientRect();
 
-    return !(
+    const hasCollisionOccurred = !(
       sprite1Rect.right < sprite2Rect.left ||
       sprite1Rect.left > sprite2Rect.right ||
       sprite1Rect.bottom < sprite2Rect.top ||
       sprite1Rect.top > sprite2Rect.bottom
     );
+
+    console.log("hasCollisionOccurred", hasCollisionOccurred);
+
+    return hasCollisionOccurred;
   };
 
   // Handle collision logic
