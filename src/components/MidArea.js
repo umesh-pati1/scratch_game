@@ -9,9 +9,9 @@ import {
   MoveSteps,
 } from "./motions";
 
-import { FlagClickedEvent, SpriteClickedEvent } from "./events";
+import { FlagClickedEvent, SpriteClickedEvent } from "./Events";
 
-import { RepeatControl } from "./controls";
+import { RepeatControl } from "./Controls";
 
 import constants from "../resources/constants";
 
@@ -23,10 +23,9 @@ const componentMap = {
   [constants.MOVE_STEPS]: MoveSteps,
   [constants.FLAG_CLICKED]: FlagClickedEvent,
   [constants.SPRITE_CLICKED]: SpriteClickedEvent,
-  [constants.REPEAT_CONTROL]: RepeatControl, // Add this if you have a RepeatControlEvent component
+  [constants.REPEAT_CONTROL]: RepeatControl,
 };
 
-// Usage example (adjust according to your setup)
 const EventRenderer = ({ events }) => {
   const { activeSprite, updateEvent } = useSprites();
 
@@ -54,11 +53,9 @@ const EventRenderer = ({ events }) => {
 
 export default function MidArea() {
   const { activeSprite, events, addEvent } = useSprites();
-
   const [activeSpriteEvents, setActiveSpriteEvents] = useState([]);
 
   useEffect(() => {
-    console.log(events);
     setActiveSpriteEvents(events[activeSprite.id] ?? []);
   }, [activeSprite, events]);
 

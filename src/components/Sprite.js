@@ -16,9 +16,7 @@ const Sprite = ({
   const [position, setPosition] = useState(initialPosition);
   const [direction, setDirection] = useState(initialDirection);
   const spriteRef = useRef(null);
-
   const execEventsRef = useRef(false);
-
   const { events } = useSprites();
 
   // Function to execute events
@@ -56,7 +54,6 @@ const Sprite = ({
         default:
           console.log(`Unknown event type: ${event.type}`);
           return;
-          break;
       }
 
       // Update the sprite's data attributes and inline styles
@@ -74,6 +71,7 @@ const Sprite = ({
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  // function to execute events which are attached to this sprite
   const executeEvents = async (events) => {
     console.log("here: ", events);
     execEventsRef.current = true;

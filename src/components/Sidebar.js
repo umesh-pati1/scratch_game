@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FlagClickedEvent } from "./events";
+import { FlagClickedEvent } from "./Events";
 import {
   GoTo,
   MoveSteps,
@@ -8,7 +8,7 @@ import {
   RotateClockwise,
 } from "./motions";
 
-import { RepeatControl } from "./controls";
+import { RepeatControl } from "./Controls";
 
 export default function Sidebar() {
   return (

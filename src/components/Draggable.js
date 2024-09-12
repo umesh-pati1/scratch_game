@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { constrainPosition, goTo, moveSprite, rotateSprite } from "../utils";
+import React from "react";
+import { moveSprite, rotateSprite } from "../utils";
 import { useSprites } from "../providers/SpriteContext";
 import constants from "../resources/constants";
 

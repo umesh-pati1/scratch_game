@@ -19,8 +19,6 @@ export default function PreviewArea() {
       sprite1Rect.top > sprite2Rect.bottom
     );
 
-    console.log("hasCollisionOccurred", hasCollisionOccurred);
-
     return hasCollisionOccurred;
   };
 
@@ -28,8 +26,6 @@ export default function PreviewArea() {
   const handleCollision = () => {
     // Select all DOM elements with the class "sprite"
     const spriteElements = document.querySelectorAll(".sprite-el");
-
-    console.log(spriteElements);
 
     for (let i = 0; i < spriteElements.length; i++) {
       for (let j = i + 1; j < spriteElements.length; j++) {
